@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heatmap Integration</title>
+    <style>
+        #heatmapContainer {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background-color: #f0f0f0;
+            /* Light gray background for better visibility */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="heatmapContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js"></script>
+    <script>
+        // Create a heatmap instance
+        var heatmapInstance = h337.create({
+            container: document.getElementById('heatmapContainer'),
+            radius: 50, // Adjust the radius based on your preference
+            maxOpacity: .6,
+            minOpacity: .1,
+            blur: .9
+        });
+
+        // Function to record clicks
+        function recordClick(event) {
+            var x = event.clientX;
+            var y = event.clientY;
+            var value = 1;
+
+            var dataPoint = {
+                x: x,
+                y: y,
+                value: value
+            };
+
+            // Add the click data point to the heatmap instance
+            heatmapInstance.addData(dataPoint);
+
+            // Optionally, you can store this data to the server for future playback
+            // Here we log it to the console
+            console.log(dataPoint);
+
+            // Uncomment to send data to server
+            // fetch('/save-click', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify(dataPoint)
+            // })
+            // .then(response => response.json())
+            // .then(data => console.log('Click data saved:', data))
+            // .catch((error) => console.error('Error:', error));
+        }
+
+        // Event listener for clicks on the heatmap container
+        document.getElementById('heatmapContainer').addEventListener('click', recordClick);
+
+        // Function to load and display recorded heatmap data (example data)
+        function loadHeatmapData(heatmapData) {
+            heatmapInstance.setData({
+                max: 10, // Set the maximum value of the data
+                data: heatmapData
+            });
+        }
+
+        // Example usage of loading heatmap data (replace with actual data from the server)
+        var exampleHeatmapData = [
+            { x: 150, y: 200, value: 5 },
+            { x: 300, y: 400, value: 3 },
+            { x: 450, y: 250, value: 8 }
+        ];
+
+        // Load the example data into the heatmap
+        loadHeatmapData(exampleHeatmapData);
+    </script>
+</body>
+
+</html>
